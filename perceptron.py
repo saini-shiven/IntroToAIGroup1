@@ -20,6 +20,8 @@ from sklearn.model_selection import KFold
 #load data
 df = pd.read_csv("phishingDataset.csv", na_values=['NaN'])
 
+
+
 #assigning x and y into features and labels respectfully; Labels being what we want to predict, and features being what we use to predict
 X = df.drop('Result', axis=1)
 y = df.Result
@@ -36,11 +38,35 @@ ppn.fit(X_train,y_train)
 # Make predication
 y_pred = ppn.predict(X_test)
 
-# Evaluate accuracy
-print('Accuracy: %.2f' % accuracy_score(y_test, y_pred))
+#Evaluate accuracy
+print('Accuracy without any folds: %.2f' % accuracy_score(y_test, y_pred))
 
+#or use k-fold cross-validation
+kf = KFold(5, shuffle=True)
+
+#with standardisation
+print("")
+print("With standardisation and 5 folds:")
+
+sc = StandardScaler()
+
+fold = 1
+# The data is split five ways, for each fold, the 
+# Perceptron is trained, tested and evaluated for accuracy
+for train_index, validate_index in kf.split(X,y):
+    sc.fit(X.iloc[train_index])
+    X_train_std = sc.transform(X.iloc[train_index])
+    X_test_std = sc.transform(X.iloc[validate_index])
+    ppn.fit(X_train_std,y.iloc[train_index])
+    y_test = y.iloc[validate_index]
+    y_pred = ppn.predict(X_test_std)
+    print(f"Fold #{fold}, Training Size: {len(X.iloc[train_index])}, Validation Size: {len(X.iloc[validate_index])}")
+    print('Accuracy: %.2f' % accuracy_score(y_test, y_pred))
+    fold += 1
+
+    
 #Confusion matrix
-def plot_confusion_matrix(cm, names, title='Confusion matrix', cmap=plt.cm.Blues):
+def plot_confusion_matrix(cm, names, title='CAVEMAN AI', cmap=plt.cm.Blues):
     plt.imshow(cm, interpolation='nearest', cmap=cmap)
     plt.title(title)
     plt.colorbar(fraction=0.05)
@@ -48,8 +74,8 @@ def plot_confusion_matrix(cm, names, title='Confusion matrix', cmap=plt.cm.Blues
     plt.xticks(tick_marks, names, rotation=45)
     plt.yticks(tick_marks, names)
     plt.tight_layout()
-    plt.ylabel('True label')
-    plt.xlabel('Predicted label')
+    plt.ylabel('True label (-1; Phishing, 1; Non-Phishing)')
+    plt.xlabel('Predicted label (-1; Phishing, 1; Non-Phishing)')
     
 cm = confusion_matrix(y_test, y_pred)
 plt.figure()
