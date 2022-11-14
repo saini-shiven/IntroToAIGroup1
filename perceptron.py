@@ -13,7 +13,6 @@ from sklearn.linear_model import Perceptron
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import KFold
 
