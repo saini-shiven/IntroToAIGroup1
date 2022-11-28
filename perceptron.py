@@ -42,6 +42,7 @@ print('Accuracy without any folds: %.2f' % accuracy_score(y_test, y_pred))
 
 #or use k-fold cross-validation
 kf = KFold(5, shuffle=True)
+# Mention that 10 didn't help accuracy
 
 #with standardisation
 print("")
