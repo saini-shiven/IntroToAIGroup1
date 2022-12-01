@@ -66,7 +66,7 @@ for train_index, validate_index in kf.split(X,y):
 
     
 #Confusion matrix
-def plot_confusion_matrix(cm, names, title='CAVEMAN AI', cmap=plt.cm.Blues):
+def plot_confusion_matrix(cm, names, title='Perceptron Confusion Matrix', cmap=plt.cm.Blues):
     plt.imshow(cm, interpolation='nearest', cmap=cmap)
     plt.title(title)
     plt.colorbar(fraction=0.05)
