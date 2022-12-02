@@ -24,15 +24,6 @@ df = pd.read_csv("phishingDataset.csv")
 plt.figure(figsize = (8,6))
 sb.heatmap(df.isnull(), cbar=False , cmap = 'magma')
 
-
-#Show sum of missing values within each column
-print(df.isnull().sum())
-#Selecting our limits
-q_low = df.drop('Result').quantile(0.01)
-q_hi  = df.drop('Result', axis=1).quantile(0.99)
-#Filterng outliers
-df_filtered = df[(df["Result"] < q_hi) & (df["Result"] > q_low)]
-#DOES NOTHING LMAO
-print(df_filtered)
-
 #DEALING WITH DUPLICATE ENTRIES
+newdf = df.drop_duplicates()
+print(df)
