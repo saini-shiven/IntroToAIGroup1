@@ -29,9 +29,9 @@ pd.crosstab(phishing['Result'],
 
 #Percentage of class values
 plt.figure(figsize=(13, 6))
-ax = sns.barplot(x=phishing['Result'], y=phishing['Result'], data=df, estimator=lambda x: len(x) / len(df) * 100, color = 'Red')
+ax = sns.barplot(x=phishing['Result'], y=phishing['Result'], data=df, estimator=lambda x: len(x) / len(df) * 100, color = 'Blue')
 ax.set(ylabel="Percent");
-ax.set_title('The Percentage of Phishing vs Legitimate Webites', size = 15);
+ax.set_title('The Percentage of Phishing Websites vs Legitimate Webites', size = 15);
 plt.savefig('resultpercentageplot.png', dpi=300, bbox_inches='tight');
 
 #Correlation between variables
