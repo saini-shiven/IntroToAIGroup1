@@ -75,7 +75,11 @@ def plot_svm(N=10, ax=None):
     plot_svc_decision_function(model, ax)
 
 #load the dataset 
-df = (pd.read_csv("phishingDataset.csv", na_values=['NaN'])).head(400)
+df = (pd.read_csv("phishingDataset.csv", na_values=['NaN']))
+#USING FIRST 400 ROWS WORKS BETTER THAN RANDOM SAMPLE
+#See repo for proof of pre-analysis
+df = df.head(400)
+#df = df.sample(50)
 
 #shuffle the data
 df = df.reindex(np.random.permutation(df.index))
