@@ -27,3 +27,4 @@ sb.heatmap(df.isnull(), cbar=False , cmap = 'magma')
 #DEALING WITH DUPLICATE ENTRIES
 newdf = df.drop_duplicates()
 print(df)
+

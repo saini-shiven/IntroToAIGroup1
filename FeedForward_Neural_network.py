@@ -28,9 +28,9 @@ def Model_Testing(predicted_labels, actual_labels):
 
 
 # Start with reading gvien dataset
-AI_dataset=pd.read_csv('/Users/vijaykesireddy/Desktop/Website AI/AI.csv')
+AI_dataset=pd.read_csv('phishingDataset.csv')
 # drop the index column and show the dataset.
-AI_dataset=AI_dataset.drop('index',axis=1)
+AI_dataset=AI_dataset.drop('id',axis=1)
 
 
 # Find the information of dataset, here check Datatype of each coulmn

@@ -9,7 +9,6 @@ Created on Mon Nov 14 14:19:55 2022
 import pandas as pd
 import numpy as np
 
-from sklearn import datasets
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix
@@ -31,7 +30,7 @@ def plot_confusion_matrix(cm, names, title='Confusion matrix', cmap=plt.cm.Blues
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
     
-#plootting the data as a svc decision function
+#plotting the data as a svc decision function
 
 def plot_svc_decision_function(model, ax=None, plot_support=True):
     """Plot the decision function for a 2D SVC"""
@@ -109,17 +108,26 @@ for axi, N in zip(ax, [60, 120]):
     plot_svm(N, axi)
     axi.set_title('N = {0}'.format(N))
 
-
+#Using an RBF kernel rather than a linear one;
+#RBF - Radial Basis function
+#Embraces approximations to allow for better scaling
+#to large datasets
 svm_model = SVC(kernel='rbf', C=100).fit(X, y)
 
+#Predicting our results based off of the test data
 y_pred = svm_model.predict(X_test)
-#print(y_test)
-#print(y_pred)
+
 print('Accuracy: %.2f' % accuracy_score(y_test, y_pred))
 cm = confusion_matrix(y_test, y_pred)
 np.set_printoptions(precision=2)
+
+#Non-normalised confusion matrix
 print('Confusion matrix, without normalization')
 print(cm)
+plt.figure()
+plot_confusion_matrix(cm, [-1,1], title='Confusion matrix')
+plt.show()
+
 #normalised confusion matrix
 cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 print('Normalized confusion matrix')
@@ -128,30 +136,3 @@ plt.figure()
 plot_confusion_matrix(cm_normalized, [-1,1], title='Normalized confusion matrix')
 plt.show()
 print(svm_model.get_params())
-
-# #build multiclass svm and fit data
-# multi_svm = SVC(gamma='scale', decision_function_shape='ovo')  
-# multi_svm.fit(X_train,y_train)
-
-# #predicting the data
-# y_pred = multi_svm.predict(X_test)
-
-
-# #put the results into a DataFrame and print side-by-side
-# output = pd.DataFrame(data=np.c_[y_test,y_pred])
-# print(output)
-
-# #calculate accuracy score and print
-# print('Accuracy: %.2f' % accuracy_score(y_test, y_pred))
-
-# #find the confusion matrix, normalise and print
-# cm = confusion_matrix(y_test, y_pred)
-# np.set_printoptions(precision=2)
-# cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
-# print('Normalized confusion matrix')
-# print(cm_normalized)
-
-# #confusion matrix as a figure
-# plt.figure()
-# plot_confusion_matrix(cm_normalized, [-1,1], title='Normalized confusion matrix')
-# plt.show()
