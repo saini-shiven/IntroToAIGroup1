@@ -75,6 +75,7 @@ def plot_svm(N=10, ax=None):
 
 #load the dataset 
 df = (pd.read_csv("phishingDataset.csv", na_values=['NaN']))
+
 #USING FIRST 400 ROWS WORKS BETTER THAN RANDOM SAMPLE
 #See repo for proof of pre-analysis
 df = df.head(400)

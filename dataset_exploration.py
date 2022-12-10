@@ -13,6 +13,7 @@ df = phishing.drop(["id","Result"], axis=1)
 #X = phishing.drop(["id","Result"], axis=1)
 #y = phishing.Result
 
+#Getting info about our dataset; datatypes and such 
 phishing.info()
 
 # defining phishing websites
@@ -41,3 +42,11 @@ mask = np.triu(np.ones_like(df.corr(), dtype=np.bool))
 heatmap = sns.heatmap(corr, mask = mask, vmin=-1, vmax=1, annot=True, cmap = 'viridis')
 heatmap.set_title('Correlation Heatmap', fontdict={'fontsize':20}, pad=12);
 plt.savefig('heatmap.png', dpi=300, bbox_inches='tight')
+
+#Prints out the count of -1, 0 and 1's in each feature
+for column in df:
+    print(df[column].value_counts())
+    
+df2 = df.replace([0],-1)
+for column in df2:
+    print(df2[column].value_counts())
