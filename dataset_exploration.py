@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 # load phishing dataset into dataframe
 phishing = pd.read_csv("phishingDataset.csv")
-df = phishing.drop(["id","Result"], axis=1)
+df = phishing.drop(["id"], axis=1)
 
 # split the dataset into features (X) and targets (y)
 #X = phishing.drop(["id","Result"], axis=1)
@@ -47,6 +47,3 @@ plt.savefig('heatmap.png', dpi=300, bbox_inches='tight')
 for column in df:
     print(df[column].value_counts())
     
-df2 = df.replace([0],-1)
-for column in df2:
-    print(df2[column].value_counts())

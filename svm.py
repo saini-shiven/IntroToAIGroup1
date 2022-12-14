@@ -19,7 +19,7 @@ from sklearn.datasets import make_blobs
 
 
 #method to plot confusion matrices
-def plot_confusion_matrix(cm, names, title='Confusion matrix', cmap=plt.cm.Blues):
+def plot_confusion_matrix(cm, names, title='SVM Confusion matrix', cmap=plt.cm.Blues):
     plt.imshow(cm, interpolation='nearest', cmap=cmap)
     plt.title(title)
     plt.colorbar(fraction=0.05)
