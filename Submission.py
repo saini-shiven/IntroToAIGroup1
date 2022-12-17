@@ -36,7 +36,7 @@ X = df.drop('Result', axis=1)
 y = df.Result
 
 # split the data 75/25
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=60)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=60)
 
 #set up a model
 ppn = Perceptron(max_iter=40,tol=0.001,eta0=1)
@@ -52,7 +52,6 @@ print('Accuracy of Perceptron without any folds: %.2f' % accuracy_score(y_test, 
 
 #or use k-fold cross-validation
 kf = KFold(5, shuffle=True)
-# Mention that 10 didn't help accuracy
 
 #with standardisation
 print("")
