@@ -333,7 +333,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 #You might well want to plot the curves that your find. 
 
 #set up kNN 
-knn_model = KNeighborsClassifier(n_neighbors=12) 
+knn_model = KNeighborsClassifier(n_neighbors=15) 
 
 #fit and test kNN 
 knn_model.fit(X_train, y_train) 
@@ -387,7 +387,7 @@ X_train, X_test, y_train, y_test = train_test_split(
   
 
 #set up kNN 
-knn_model = KNeighborsClassifier(n_neighbors=12) 
+knn_model = KNeighborsClassifier(n_neighbors=15) 
 
 #fit and test kNN 
 knn_model.fit(X_train, y_train) 
@@ -444,7 +444,7 @@ X_train, X_test, y_train, y_test = train_test_split(
   
 
 #set up kNN 
-knn_model = KNeighborsClassifier(n_neighbors=12) 
+knn_model = KNeighborsClassifier(n_neighbors=15) 
 
 #fit and test kNN 
 knn_model.fit(X_train, y_train) 
