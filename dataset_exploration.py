@@ -28,6 +28,10 @@ pd.crosstab(phishing['Result'],
             rownames=["Result (-1=Phishing,1=Legitimate)"]
             ).plot.bar(stacked=False)
 
+
+#Below code reused from: https://www.kaggle.com/code/nourajo/phishing-websites-ensembling-model
+#For experimentation use only. 
+
 #Percentage of class values
 plt.figure(figsize=(13, 6))
 ax = sns.barplot(x=phishing['Result'], y=phishing['Result'], data=df, estimator=lambda x: len(x) / len(df) * 100, color = 'Blue')
