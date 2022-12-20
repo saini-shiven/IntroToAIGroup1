@@ -7,6 +7,7 @@ Created on Mon Nov 14 10:23:35 2022
 """
 
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import plot_tree
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import ConfusionMatrixDisplay
@@ -110,4 +111,28 @@ decisionTree5.fit(X_train_std,y_train)
 y_pred = decisionTree5.predict(X_test_std)
 
 evaluateAccuracy(y_pred)
+
+
+# WITH EDITED DATASET
+
+#loading dataset without 0's 
+phishingEdited = phishing.replace([0], -1) 
+# split the dataset into features (X) and targets (y)
+X = phishingEdited.drop(["id","having_Sub_Domain","double_slash_redirecting","Result"], axis=1)
+y = phishingEdited.Result
+
+# split the dataset into a training set and testing set
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+decisionTree6 = DecisionTreeClassifier(criterion='entropy')
+
+# train the model
+decisionTree4.fit(X_train,y_train)
+
+# make predictions using the testing data
+y_pred = decisionTree4.predict(X_test)
+
+evaluateAccuracy(y_pred)
+
+
 

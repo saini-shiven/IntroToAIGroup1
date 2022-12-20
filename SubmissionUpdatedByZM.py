@@ -20,6 +20,7 @@ from sklearn.svm import SVC
 from sklearn.neighbors import KNeighborsClassifier 
 from sklearn.tree import DecisionTreeClassifier 
 from sklearn.ensemble import RandomForestClassifier 
+from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import ConfusionMatrixDisplay 
   
 
@@ -625,4 +626,224 @@ def evaluateAccuracy(predictions):
     plt.show()
 
 evaluateAccuracy(y_pred)
+
+"""
+Decision Tree
+@author: Andreas Salcedo
+"""
+# load phishing dataset into dataframe
+phishing = pd.read_csv("phishingDataset.csv")
+
+# split the dataset into features (X) and targets (y)
+X = phishing.drop(["id","Result"], axis=1)
+y = phishing.Result
+
+# split the dataset into a training set and testing set
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+
+# WITH ENTROPY CRITERION
+
+# create an instance of a decision tree classifer (split on entropy)
+decisionTree = DecisionTreeClassifier(criterion='entropy')
+
+# train the model
+decisionTree.fit(X_train,y_train)
+
+# make predictions using the testing data
+y_pred = decisionTree.predict(X_test)
+
+# function that uses metrics to check accuracy and plot confusion matrix
+def evaluateAccuracy(predictions):
+    # calculate accuracy of model
+    accuracy = accuracy_score(y_test, predictions)
+    # rounded to 2 significant figures
+    print('Accuracy of decision tree with original dataset: %.2f' % accuracy)
+    
+    # produce confusion matrix
+    cm = confusion_matrix(y_test, predictions)
+    display = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=(["Phishing","Non-Phishing"]))
+    display.plot()
+    plt.show()
+
+evaluateAccuracy(y_pred)
+
+
+# WITH GINI CRITERION AND BEST SPLITTER
+
+# create instance of decision tree
+decisionTree2 = DecisionTreeClassifier(criterion='gini')
+# train the model
+decisionTree2.fit(X_train,y_train)
+
+# make predictions using the testing data
+y_pred = decisionTree2.predict(X_test)
+
+evaluateAccuracy(y_pred)
+
+
+# WITH GINI CRITERION AND RANDOM SPLITTER
+
+# create instance of decision tree
+decisionTree3 = DecisionTreeClassifier(criterion='gini', splitter="random")
+# train the model
+decisionTree3.fit(X_train,y_train)
+
+# make predictions using the testing data
+y_pred = decisionTree3.predict(X_test)
+
+evaluateAccuracy(y_pred)
+
+
+# WITH ENTROPY CRITERION AND RANDOM SPLITTER
+
+# create instance of decision tree
+decisionTree4 = DecisionTreeClassifier(criterion='entropy', splitter="random")
+# train the model
+decisionTree4.fit(X_train,y_train)
+
+# make predictions using the testing data
+y_pred = decisionTree4.predict(X_test)
+
+evaluateAccuracy(y_pred)
+
+
+# WITH STANDARD SCALER
+
+# create instance of decision tree
+decisionTree5 = DecisionTreeClassifier(criterion='entropy')
+
+# apply standard scaler to the data
+scaler = StandardScaler()
+scaler.fit(X_train)
+X_train_std = scaler.transform(X_train)
+X_test_std = scaler.transform(X_test)
+
+# train the model
+decisionTree5.fit(X_train_std,y_train)
+
+# make predictions using the testing data
+y_pred = decisionTree5.predict(X_test_std)
+
+evaluateAccuracy(y_pred)
+
+
+# WITH EDITED DATASET
+
+#loading dataset without 0's 
+phishingEdited = phishing.replace([0], -1) 
+# split the dataset into features (X) and targets (y)
+X = phishingEdited.drop(["id","having_Sub_Domain","double_slash_redirecting","Result"], axis=1)
+y = phishingEdited.Result
+
+# split the dataset into a training set and testing set
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+decisionTree6 = DecisionTreeClassifier(criterion='entropy')
+
+# train the model
+decisionTree4.fit(X_train,y_train)
+
+# make predictions using the testing data
+y_pred = decisionTree4.predict(X_test)
+
+accuracy = accuracy_score(y_test, y_pred)
+# rounded to 2 significant figures
+print('Accuracy of decision tree with edited dataset: %.2f' % accuracy)
+
+# produce confusion matrix
+cm = confusion_matrix(y_test, y_pred)
+display = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=(["Phishing","Non-Phishing"]))
+display.plot()
+plt.show()
+
+"""
+Naive Bayes
+@author: Andreas Salcedo
+"""
+# split the dataset into features (X) and targets (y)
+X = phishing.drop(["id","Result"], axis=1)
+y = phishing.Result
+
+# split the dataset into a training set and testing set
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# create gaussian naive bayes model
+model = GaussianNB()
+model.fit(X, y);
+
+# make predictions using the testing data
+y_pred = model.predict(X_test)
+
+# calculate accuracy of model
+accuracy = accuracy_score(y_test, y_pred)
+# rounded to 2 significant figures
+print('Accuracy of Naive Bayes with original dataset: %.2f' % accuracy)
+
+# produce confusion matrix
+cm = confusion_matrix(y_test, y_pred)
+display = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=(["Phishing","Non-Phishing"]))
+display.plot()
+plt.show()
+
+
+# WITH STANDARD SCALER
+
+# create instance of decision tree
+model2 = GaussianNB()
+
+# apply standard scaler to the data
+scaler = StandardScaler()
+scaler.fit(X_train)
+X_train_std = scaler.transform(X_train)
+X_test_std = scaler.transform(X_test)
+
+# train the model
+model2.fit(X_train_std,y_train)
+
+# make predictions using the testing data
+y_pred = model2.predict(X_test_std)
+
+# calculate accuracy of model
+accuracy = accuracy_score(y_test, y_pred)
+# rounded to 2 significant figures
+print('Accuracy of Naive Bayes with original dataset (Standard Scaler): %.2f' % accuracy)
+
+# produce confusion matrix
+cm = confusion_matrix(y_test, y_pred)
+display = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=(["Phishing","Non-Phishing"]))
+display.plot()
+plt.show()
+
+
+# WITH EDITED DATASET
+
+#loading dataset without 0's 
+phishingEdited = phishing.replace([0], -1) 
+# split the dataset into features (X) and targets (y)
+X = phishingEdited.drop(["id","having_Sub_Domain","double_slash_redirecting","Result"], axis=1)
+y = phishingEdited.Result
+
+# split the dataset into a training set and testing set
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+model3 = GaussianNB()
+
+# train the model
+model3.fit(X_train,y_train)
+
+# make predictions using the testing data
+y_pred = model3.predict(X_test)
+
+# calculate accuracy of model
+accuracy = accuracy_score(y_test, y_pred)
+# rounded to 2 significant figures
+print('Accuracy of Naive Bayes with edited dataset: %.2f' % accuracy)
+
+# produce confusion matrix
+cm = confusion_matrix(y_test, y_pred)
+display = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=(["Phishing","Non-Phishing"]))
+display.plot()
+plt.show()
+
 
