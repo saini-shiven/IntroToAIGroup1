@@ -21,10 +21,9 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier 
 from sklearn.ensemble import RandomForestClassifier 
 from sklearn.naive_bayes import GaussianNB
+from sklearn.naive_bayes import BernoulliNB
 from sklearn.metrics import ConfusionMatrixDisplay 
 from sklearn import linear_model
-
-from sklearn import preprocessing # Scale our data feature values
   
 
 #load overall data
@@ -781,7 +780,7 @@ y_pred = model.predict(X_test)
 # calculate accuracy of model
 accuracy = accuracy_score(y_test, y_pred)
 # rounded to 2 significant figures
-print('Accuracy of Naive Bayes with original dataset: %.2f' % accuracy)
+print('Accuracy of Naive Bayes (Gaussian) with original dataset: %.2f' % accuracy)
 
 # produce confusion matrix
 cm = confusion_matrix(y_test, y_pred)
@@ -789,6 +788,28 @@ display = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=(["Phishing
 display.plot()
 plt.show()
 
+# BERNOULLI CLASSIFIER
+
+# split the dataset into a training set and testing set
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# create gaussian naive bayes model
+model = BernoulliNB()
+model.fit(X, y);
+
+# make predictions using the testing data
+y_pred = model.predict(X_test)
+
+# calculate accuracy of model
+accuracy = accuracy_score(y_test, y_pred)
+# rounded to 2 significant figures
+print('Accuracy of Naive Bayes (Bernoulli) with original dataset: %.2f' % accuracy)
+
+# produce confusion matrix
+cm = confusion_matrix(y_test, y_pred)
+display = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=(["Phishing","Non-Phishing"]))
+display.plot()
+plt.show()
 
 # WITH STANDARD SCALER
 
