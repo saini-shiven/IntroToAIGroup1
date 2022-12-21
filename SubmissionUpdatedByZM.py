@@ -22,6 +22,9 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier 
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import ConfusionMatrixDisplay 
+from sklearn import linear_model
+from tensorflow.keras import models, layers # model two
+from sklearn import preprocessing # Scale our data feature values
   
 
 #load overall data
@@ -168,14 +171,14 @@ def plot_svc_decision_function(model, ax=None, plot_support=True):
     
     # plot decision boundary and margins
     ax.contour(X, Y, P, colors='k',
-               levels=[-1, 0, 1], alpha=0.5,
-               linestyles=['--', '-', '--'])
+                levels=[-1, 0, 1], alpha=0.5,
+                linestyles=['--', '-', '--'])
     
     # plot support vectors
     if plot_support:
         ax.scatter(model.support_vectors_[:, 0],
-                   model.support_vectors_[:, 1],
-                   s=300, linewidth=1, facecolors='none');
+                    model.support_vectors_[:, 1],
+                    s=300, linewidth=1, facecolors='none');
     ax.set_xlim(xlim)
     ax.set_ylim(ylim)
 
@@ -846,4 +849,197 @@ display = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=(["Phishing
 display.plot()
 plt.show()
 
+"""
+Logistic Regression
 
+@author: vijaykesireddy - adapted for submission by Shiven Saini
+"""
+
+# A general function for model testing with accuracy, classification report etc.
+def Model_Testing(predicted_labels, actual_labels):
+    print("\n")#new line
+    print ("Accuracy: ",accuracy_score(actual_labels,predicted_labels))#accuracy of model
+    
+
+# drop the index column and show the dataset.
+df=df.drop('id',axis=1)
+
+# First Extract all the features
+features_of_Data=df.drop('Result',axis=1)
+
+# Second Extract only target column
+target_classes=df['Result']
+
+# Split our dataset features and target labels into training and testing variables 70% use for training 30% testing
+features_of_training_data,features_of_testing_data,target_of_training_data,target_of_testing_data=train_test_split(features_of_Data,target_classes,test_size=0.30,random_state=42)
+
+# Creating object of our model
+LogisticReg_model = linear_model.LogisticRegression()
+# pass the training features and training labels to our model
+LogisticReg_model.fit(features_of_training_data,target_of_training_data)
+
+# Get prediction of model using test dataset
+prediction_from_logreg=LogisticReg_model.predict(features_of_testing_data)
+# call function.. and show results
+print('\n Evalution of Logistic Reggression with original dataset')
+Model_Testing(prediction_from_logreg,target_of_testing_data)
+
+
+#Repeating the process with edited dataset
+
+# drop the index column and show the dataset.
+df=dfEdited.drop('id',axis=1)
+
+# First Extract all the features
+features_of_Data=df.drop('Result',axis=1)
+
+# Second Extract only target column
+target_classes=df['Result']
+
+# Split our dataset features and target labels into training and testing variables 70% use for training 30% testing
+features_of_training_data,features_of_testing_data,target_of_training_data,target_of_testing_data=train_test_split(features_of_Data,target_classes,test_size=0.30,random_state=42)
+
+# Creating object of our model
+LogisticReg_model = linear_model.LogisticRegression()
+# pass the training features and training labels to our model
+LogisticReg_model.fit(features_of_training_data,target_of_training_data)
+
+# Get prediction of model using test dataset
+prediction_from_logreg=LogisticReg_model.predict(features_of_testing_data)
+# call function.. and show results
+print('\n Evalution of Logistic Reggression with edited dataset')
+Model_Testing(prediction_from_logreg,target_of_testing_data)
+
+"""
+Feed forward neural network
+
+@author: vijaykesireddy - adapted for submission by Shiven Saini
+"""
+
+# A general function for model testing with accuracy, classification report etc.
+def Model_Testing(predicted_labels, actual_labels):
+    print("\n")#new line
+    print ("Accuracy_test_set: ",accuracy_score(actual_labels,predicted_labels))#accuracy of model
+    print("\n")#new line
+
+# drop the index column and show the dataset.
+AI_dataset=df
+
+
+# Next observed the null values, there is no missing value in dataset
+AI_dataset[AI_dataset.isnull()].sum()
+# print('\n \n')
+
+# First Extract all the features
+features_of_Data=AI_dataset.drop('Result',axis=1)
+# Second Extract only target column
+target_classes=AI_dataset['Result']
+
+# Split our dataset features and target labels into training and testing variables 70% use for training 30% testing
+features_of_training_data,features_of_testing_data,target_of_training_data,target_of_testing_data=train_test_split(features_of_Data,target_classes,test_size=0.30,random_state=42)
+
+# create object of label encoder class
+label_encode= preprocessing.LabelEncoder()
+# fit and transform training,testing labels
+target_of_training_data=label_encode.fit_transform(target_of_training_data)
+target_of_testing_data=label_encode.fit_transform(target_of_testing_data)
+
+# start building custom neural network
+neural_network=models.Sequential()
+# here is the input layer of my neural network
+neural_network.add(layers.Dense(128, input_shape=(features_of_training_data.shape[1],), activation='relu'))
+# here is the hidden layer of my neural network
+neural_network.add(layers.Dense(128, activation='relu'))
+# here is the hidden layer of my neural network
+neural_network.add(layers.Dense(64, activation='relu'))
+# here is the hidden layer of my neural network
+neural_network.add(layers.Dense(32, activation='relu'))
+# here is the hidden layer of my neural network
+neural_network.add(layers.Dense(8, activation='relu'))
+# here is the last output layer of my neural network
+neural_network.add(layers.Dense(1, activation='sigmoid'))
+
+
+# compile the above neural network with loss function and optimiers
+neural_network.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+# Start training of model with epoch 20, and both training and validation data
+print("\n Start Neural network training \n")
+History_of_NN=neural_network.fit(features_of_training_data,target_of_training_data,epochs=20,validation_data=(features_of_testing_data,target_of_testing_data))
+
+
+# Obtaining predictions of neural network on test dataset
+prediction_from_neural_nerwork=neural_network.predict(features_of_testing_data)
+# Compile model prediction probabilies
+prediction_neural_network=[]
+for i in prediction_from_neural_nerwork:
+  if i >=0.5: # if probability greater then 0.50
+    prediction_neural_network.append(1)
+  else: # if probability less then 0.50
+    prediction_neural_network.append(0)
+#print('\n Evalution of Neural network with original dataset: ')
+# # call function.. and show results of Neural Network
+originalAcc = accuracy_score(prediction_neural_network,target_of_testing_data)
+
+
+#repeating process with edited dataset
+AI_dataset=dfEdited
+
+
+# Next observed the null values, there is no missing value in dataset
+AI_dataset[AI_dataset.isnull()].sum()
+# print('\n \n')
+
+# First Extract all the features
+features_of_Data=AI_dataset.drop('Result',axis=1)
+# Second Extract only target column
+target_classes=AI_dataset['Result']
+
+# Split our dataset features and target labels into training and testing variables 70% use for training 30% testing
+features_of_training_data,features_of_testing_data,target_of_training_data,target_of_testing_data=train_test_split(features_of_Data,target_classes,test_size=0.30,random_state=42)
+
+# create object of label encoder class
+label_encode= preprocessing.LabelEncoder()
+# fit and transform training,testing labels
+target_of_training_data=label_encode.fit_transform(target_of_training_data)
+target_of_testing_data=label_encode.fit_transform(target_of_testing_data)
+
+# start building custom neural network
+neural_network=models.Sequential()
+# here is the input layer of my neural network
+neural_network.add(layers.Dense(128, input_shape=(features_of_training_data.shape[1],), activation='relu'))
+# here is the hidden layer of my neural network
+neural_network.add(layers.Dense(128, activation='relu'))
+# here is the hidden layer of my neural network
+neural_network.add(layers.Dense(64, activation='relu'))
+# here is the hidden layer of my neural network
+neural_network.add(layers.Dense(32, activation='relu'))
+# here is the hidden layer of my neural network
+neural_network.add(layers.Dense(8, activation='relu'))
+# here is the last output layer of my neural network
+neural_network.add(layers.Dense(1, activation='sigmoid'))
+
+
+# compile the above neural network with loss function and optimiers
+neural_network.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+# Start training of model with epoch 20, and both training and validation data
+print("\n Start Neural network training \n")
+History_of_NN=neural_network.fit(features_of_training_data,target_of_training_data,epochs=20,validation_data=(features_of_testing_data,target_of_testing_data))
+
+
+# Obtaining predictions of neural network on test dataset
+prediction_from_neural_nerwork=neural_network.predict(features_of_testing_data)
+# Compile model prediction probabilies
+prediction_neural_network=[]
+for i in prediction_from_neural_nerwork:
+  if i >=0.5: # if probability greater then 0.50
+    prediction_neural_network.append(1)
+  else: # if probability less then 0.50
+    prediction_neural_network.append(0)
+#print('\n Evalution of Neural network with edited dataset: ')
+# # call function.. and show results of Neural Network
+editedAcc = accuracy_score(prediction_neural_network,target_of_testing_data)
+
+print('\n Evaluation of Neural Network with original dataset:')
+print(originalAcc)
+print('\n Evaluation of Neural Network with edited dataset:')
+print(editedAcc)
